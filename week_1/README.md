@@ -1,4 +1,4 @@
-week
+week1
 =======
 >1.下載R語言     
 >2.下載Rstudio   
