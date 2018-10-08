@@ -1,17 +1,28 @@
+WEEK3
+==============================
 #前置作業
+```
 install.packages("plotly")
 library(plotly)
 install.packages("ggplot2")
 library(ggplot2)
+````
+
 #data from https://www.basketball-reference.com/players/s/smithjr01.html
+```
 JR
 qplot(`FG%`, PTS, data = JR)
 class(JR)
 JR2 <- JR[1:15, ]
+```
 
 #J.R. SMITH的生涯命中率分析
+```
 qplot(Season, data = JR2, geom = "bar", weight = PTS, colour = "red") +
  ylab("PTS")
+```
 
 #J.R. SMITH的生涯得分走勢
+```
 ggplot(JR2, aes(x = Season, y = PTS, group = 1)) + geom_line(colour = "blue")
+```
