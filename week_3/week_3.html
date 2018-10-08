@@ -124,9 +124,6 @@ $(document).ready(function () {
 </div>
 
 
-<div id="week3" class="section level1">
-<h1>WEEK3</h1>
-</div>
 <div class="section level1">
 <h1>目標</h1>
 <p>透過命中率和得分的分析找出J.R的巔峰時期</p>
@@ -150,12 +147,15 @@ JR2 &lt;- JR[1:15, ]</code></pre>
 <h1>J.R. SMITH的生涯命中率分析</h1>
 <p>將J.R.的命中率以不同賽季作為橫軸，以長條圖呈現</p>
 <pre><code>qplot(Season, data = JR2, geom = &quot;bar&quot;, weight = PTS, colour = &quot;red&quot;) +
- ylab(&quot;PTS&quot;)</code></pre>
+  ylab(&quot;PTS&quot;)
+print(qplot(Season, data = JR2, geom = &quot;bar&quot;, weight = PTS, colour = &quot;red&quot;) +
+        ylab(&quot;PTS&quot;))</code></pre>
 </div>
 <div id="j.r.-smith" class="section level1">
 <h1>J.R. SMITH的生涯得分走勢</h1>
 <p>將J.R.的得分以不同賽季作為橫軸，以折現圖呈現</p>
-<pre><code>ggplot(JR2, aes(x = Season, y = PTS, group = 1)) + geom_line(colour = &quot;blue&quot;)</code></pre>
+<pre><code>ggplot(JR2, aes(x = Season, y = PTS, group = 1)) + geom_line(colour = &quot;blue&quot;)
+print(ggplot(JR2, aes(x = Season, y = PTS, group = 1)) + geom_line(colour = &quot;blue&quot;))</code></pre>
 </div>
 <div class="section level1">
 <h1>結論</h1>
