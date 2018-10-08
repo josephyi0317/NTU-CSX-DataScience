@@ -1,6 +1,9 @@
+
+---
 WEEK3
 ==============================
 #目標
+
 透過命中率和得分的分析找出J.R的巔峰時期
 
 #前置作業
@@ -12,6 +15,7 @@ library(ggplot2)
 ````
 
 #data from https://www.basketball-reference.com/players/s/smithjr01.html
+
 把表格做一些處理，消去不需要的欄位
 ```
 JR
@@ -21,6 +25,7 @@ JR2 <- JR[1:15, ]
 ```
 
 #J.R. SMITH的生涯命中率分析
+
 將J.R.的命中率以不同賽季作為橫軸，以長條圖呈現
 ```
 qplot(Season, data = JR2, geom = "bar", weight = PTS, colour = "red") +
@@ -28,9 +33,11 @@ qplot(Season, data = JR2, geom = "bar", weight = PTS, colour = "red") +
 ```
 
 #J.R. SMITH的生涯得分走勢
+
 將J.R.的得分以不同賽季作為橫軸，以折現圖呈現
 ```
 ggplot(JR2, aes(x = Season, y = PTS, group = 1)) + geom_line(colour = "blue")
 ```
 #結論
+
 J.R.在金塊、尼克的時期是他的巔峰
