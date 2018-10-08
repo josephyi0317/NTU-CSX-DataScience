@@ -124,17 +124,42 @@ $(document).ready(function () {
 </div>
 
 
+<div id="week3" class="section level1">
+<h1>WEEK3</h1>
+</div>
+<div class="section level1">
+<h1>目標</h1>
+<p>透過命中率和得分的分析找出J.R的巔峰時期</p>
+</div>
 <div class="section level1">
 <h1>前置作業</h1>
-<p>install.packages(“plotly”) library(plotly) install.packages(“ggplot2”) library(ggplot2) #data from <a href="https://www.basketball-reference.com/players/s/smithjr01.html" class="uri">https://www.basketball-reference.com/players/s/smithjr01.html</a> JR qplot(<code>FG%</code>, PTS, data = JR) class(JR) JR2 &lt;- JR[1:15, ]</p>
+<pre><code>install.packages(&quot;plotly&quot;)
+library(plotly)
+install.packages(&quot;ggplot2&quot;)
+library(ggplot2)</code></pre>
+</div>
+<div id="data-from-httpswww.basketball-reference.complayersssmithjr01.html" class="section level1">
+<h1>data from <a href="https://www.basketball-reference.com/players/s/smithjr01.html" class="uri">https://www.basketball-reference.com/players/s/smithjr01.html</a></h1>
+<p>把表格做一些處理，消去不需要的欄位</p>
+<pre><code>JR
+qplot(`FG%`, PTS, data = JR)
+class(JR)
+JR2 &lt;- JR[1:15, ]</code></pre>
 </div>
 <div id="j.r.-smith" class="section level1">
 <h1>J.R. SMITH的生涯命中率分析</h1>
-<p>qplot(Season, data = JR2, geom = “bar”, weight = PTS, colour = “red”) + ylab(“PTS”)</p>
+<p>將J.R.的命中率以不同賽季作為橫軸，以長條圖呈現</p>
+<pre><code>qplot(Season, data = JR2, geom = &quot;bar&quot;, weight = PTS, colour = &quot;red&quot;) +
+ ylab(&quot;PTS&quot;)</code></pre>
 </div>
 <div id="j.r.-smith" class="section level1">
 <h1>J.R. SMITH的生涯得分走勢</h1>
-<p>ggplot(JR2, aes(x = Season, y = PTS, group = 1)) + geom_line(colour = “blue”)</p>
+<p>將J.R.的得分以不同賽季作為橫軸，以折現圖呈現</p>
+<pre><code>ggplot(JR2, aes(x = Season, y = PTS, group = 1)) + geom_line(colour = &quot;blue&quot;)</code></pre>
+</div>
+<div class="section level1">
+<h1>結論</h1>
+<p>J.R.在金塊、尼克的時期是他的巔峰</p>
 </div>
 
 
