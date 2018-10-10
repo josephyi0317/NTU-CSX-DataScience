@@ -1,0 +1,745 @@
+
+WEEK_4
+========
+從Jeans版上抓取文本(感覺可以寫loop，但我怕寫錯，以後再研究)，主要是2018的推文
+```{r}
+library(tmcn)
+library(rvest)
+#page 1
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(1)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+
+#page2
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1018.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(2)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1018.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+
+#page3
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1017.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(3)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1017.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+
+#page4
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1016.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(4)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1016.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page5
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1015.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(5)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1015.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page6
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1014.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(6)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1014.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page7
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1013.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(7)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1013.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page8
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1012.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(8)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1012.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page9
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1011.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(9)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1011.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page10
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1010.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(10)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1010.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page11
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1009.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(11)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1009.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page12
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1008.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(12)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1008.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page13
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1007.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(13)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1007.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page14
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1006.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(14)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1006.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page15
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1005.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(15)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1005.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+#page16
+pttTestFunction <- function(URL, filename)
+{
+  URL   = "https://www.ptt.cc/bbs/Jeans/index1004.html"
+  html  = read_html(URL)
+  title = html_nodes(html, "a")
+  href  = html_attr(title, "href")
+  data = data.frame(title = toUTF8(html_text(title)),
+                    href = href)
+  data = data[-c(1:10),]
+  getContent <- function(x) {
+    url  = paste0("https://www.ptt.cc", x)
+    tag  = html_node(read_html(url), 'div#main-content.bbs-screen.bbs-content')
+    text = toUTF8(html_text(tag))
+  }
+  #getContent(data$href[1])
+  allText = sapply(data$href, getContent)
+  allText
+  out <- file(filename, "w", encoding="BIG-5") 
+  write.table(allText, filename) 
+  close(out) 
+}
+
+id = c(16)
+URL = paste0("https://www.ptt.cc/bbs/Jeans/index1004.html", id, ".html")
+filename = paste0(id, ".txt")
+pttTestFunction(URL[1], filename[1])
+mapply(pttTestFunction, 
+       URL = URL, filename = filename)
+```
+#開始文字處理
+先不做任何清洗跑一次，再看結果和freqFrame的統計結果來篩字
+```{r}
+setwd("C:/Users/joe/Documents/R/filename")
+getwd()
+rm(list=ls(all.names = TRUE))
+library(NLP)
+library(tm)
+install.packages("jiebaRD")
+install.packages("jiebaR")
+install.packages("wordcloud")
+library(jiebaRD)
+library(jiebaR)
+library(RColorBrewer)
+library(wordcloud)
+filenames <- list.files(getwd(), pattern=".txt")
+files <- lapply(filenames, readLines, encoding="BIG-5")
+docs <- Corpus(VectorSource(files))
+#移除可能有問題的符號
+toSpace <- content_transformer(function(x, pattern) {
+  return (gsub(pattern, " ", x))
+}
+)
+docs <- tm_map(docs, toSpace, "http")
+docs <- tm_map(docs, toSpace, "※")
+docs <- tm_map(docs, toSpace, "◆")
+docs <- tm_map(docs, toSpace, "‧")
+docs <- tm_map(docs, toSpace, "的")
+docs <- tm_map(docs, toSpace, "我")
+docs <- tm_map(docs, toSpace, "是")
+docs <- tm_map(docs, toSpace, "看板")
+docs <- tm_map(docs, toSpace, "作者")
+docs <- tm_map(docs, toSpace, "發信站")
+docs <- tm_map(docs, toSpace, "批踢踢實業坊")
+docs <- tm_map(docs, toSpace, "NA")
+docs <- tm_map(docs, toSpace, "推")
+docs <- tm_map(docs, toSpace, "穿")
+docs <- tm_map(docs, toSpace, "就")
+docs <- tm_map(docs, toSpace, "了")
+docs <- tm_map(docs, toSpace, "有")
+docs <- tm_map(docs, toSpace, "都")
+docs <- tm_map(docs, toSpace, "不")
+docs <- tm_map(docs, toSpace, "很")
+docs <- tm_map(docs, toSpace, "可以")
+docs <- tm_map(docs, toSpace, "在")
+docs <- tm_map(docs, toSpace, "買")
+docs <- tm_map(docs, toSpace, "標題")
+docs <- tm_map(docs, toSpace, "網址")
+docs <- tm_map(docs, toSpace, "XD")
+docs <- tm_map(docs, toSpace, "pttcc")
+docs <- tm_map(docs, toSpace, "文章")
+docs <- tm_map(docs, toSpace, "覺得")
+docs <- tm_map(docs, toSpace, "編輯")
+docs <- tm_map(docs, toSpace, "網址")
+docs <- tm_map(docs, toSpace, "你")
+docs <- tm_map(docs, toSpace, "也")
+docs <- tm_map(docs, toSpace, "褲子")
+docs <- tm_map(docs, toSpace, "要")
+docs <- tm_map(docs, toSpace, "真好")
+docs <- tm_map(docs, toSpace, "嗎")
+docs <- tm_map(docs, toSpace, "跟")
+docs <- tm_map(docs, toSpace, "想")
+docs <- tm_map(docs, toSpace, "時間")
+docs <- tm_map(docs, toSpace, "還")
+docs <- tm_map(docs, toSpace, "沒")
+docs <- tm_map(docs, toSpace, "因為")
+docs <- tm_map(docs, toSpace, "所以")
+docs <- tm_map(docs, toSpace, "自己")
+docs <- tm_map(docs, toSpace, "比較")
+docs <- tm_map(docs, toSpace, "好看")
+docs <- tm_map(docs, toSpace, "uniqlo")
+docs <- tm_map(docs, toSpace, "zara")
+docs <- tm_map(docs, toSpace, "到")
+docs <- tm_map(docs, toSpace, "版型")
+docs <- tm_map(docs, toSpace, "只")
+docs <- tm_map(docs, toSpace, "這")
+docs <- tm_map(docs, toSpace, "吧")
+docs <- tm_map(docs, toSpace, "過")
+docs <- tm_map(docs, toSpace, "後")
+docs <- tm_map(docs, toSpace, "直接")
+docs <- tm_map(docs, toSpace, "目前")
+docs <- tm_map(docs, toSpace, "tiesto")
+docs <- tm_map(docs, toSpace, "Metallicat")
+docs <- tm_map(docs, toSpace, "jerry")
+docs <- tm_map(docs, toSpace, "HsuErl")
+docs <- tm_map(docs, toSpace, "曾")
+docs <- tm_map(docs, toSpace, "和")
+docs <- tm_map(docs, toSpace, "一下")
+docs <- tm_map(docs, toSpace, "真")
+docs <- tm_map(docs, toSpace, "能")
+docs <- tm_map(docs, toSpace, "callTM")
+docs <- tm_map(docs, toSpace, "他們")
+docs <- tm_map(docs, toSpace, "大家")
+docs <- tm_map(docs, toSpace, "才")
+docs <- tm_map(docs, toSpace, "口袋")
+docs <- tm_map(docs, toSpace, "特別")
+docs <- tm_map(docs, toSpace, "會")
+docs <- tm_map(docs, toSpace, "應該")
+docs <- tm_map(docs, toSpace, "UQ")
+docs <- tm_map(docs, toSpace, "看")
+docs <- tm_map(docs, toSpace, "多")
+docs <- tm_map(docs, toSpace, "分享")
+docs <- tm_map(docs, toSpace, "件")
+docs <- tm_map(docs, toSpace, "個")
+docs <- tm_map(docs, toSpace, "可")
+docs <- tm_map(docs, toSpace, "如果")
+docs <- tm_map(docs, toSpace, "一樣")
+docs <- tm_map(docs, toSpace, "請問")
+docs <- tm_map(docs, toSpace, "謝謝")
+docs <- tm_map(docs, toSpace, "牛仔褲")
+docs <- tm_map(docs, toSpace, "外套")
+docs <- tm_map(docs, toSpace, "好")
+docs <- tm_map(docs, toSpace, "大")
+docs <- tm_map(docs, toSpace, "去")
+docs <- tm_map(docs, toSpace, "原色")
+docs <- tm_map(docs, toSpace, "知道")
+docs <- tm_map(docs, toSpace, "MrG")
+docs <- tm_map(docs, toSpace, "感謝")
+docs <- tm_map(docs, toSpace, "台灣")
+docs <- tm_map(docs, toSpace, "日本")
+docs <- tm_map(docs, toSpace, "正面")
+docs <- tm_map(docs, toSpace, "喜歡")
+docs <- tm_map(docs, toSpace, "感覺")
+docs <- tm_map(docs, toSpace, "最近")
+docs <- tm_map(docs, toSpace, "小弟")
+docs <- tm_map(docs, toSpace, "大大")
+docs <- tm_map(docs, toSpace, "但")
+docs <- tm_map(docs, toSpace, "一")
+docs <- tm_map(docs, toSpace, "人")
+docs <- tm_map(docs, toSpace, "Jeans")
+docs <- tm_map(docs, toSpace, "說")
+docs <- tm_map(docs, toSpace, "來自")
+docs <- tm_map(docs, toSpace, "像")
+docs <- tm_map(docs, toSpace, "布料")
+docs <- tm_map(docs, toSpace, "來")
+docs <- tm_map(docs, toSpace, "問題")
+docs <- tm_map(docs, toSpace, "上")
+docs <- tm_map(docs, toSpace, "什麼")
+docs <- tm_map(docs, toSpace, "褲")
+docs <- tm_map(docs, toSpace, "起來")
+docs <- tm_map(docs, toSpace, "用")
+docs <- tm_map(docs, toSpace, "啊")
+docs <- tm_map(docs, toSpace, "那")
+docs <- tm_map(docs, toSpace, "最")
+docs <- tm_map(docs, toSpace, "尺寸")
+docs <- tm_map(docs, toSpace, "httpswwwpttccbbs")
+docs <- tm_map(docs, toSpace, "ccshboy")
+docs <- tm_map(docs, toSpace, "點")
+docs <- tm_map(docs, toSpace, "起")
+docs <- tm_map(docs, toSpace, "次")
+docs <- tm_map(docs, toSpace, "條")
+docs <- tm_map(docs, toSpace, "再")
+docs <- tm_map(docs, toSpace, "養")
+docs <- tm_map(docs, toSpace, "些")
+docs <- tm_map(docs, toSpace, "版")
+docs <- tm_map(docs, toSpace, "樣")
+docs <- tm_map(docs, toSpace, "D")
+docs <- tm_map(docs, toSpace, "品牌")
+docs <- tm_map(docs, toSpace, "網")
+docs <- tm_map(docs, toSpace, "太")
+docs <- tm_map(docs, toSpace, "年")
+docs <- tm_map(docs, toSpace, "現")
+docs <- tm_map(docs, toSpace, "又")
+docs <- tm_map(docs, toSpace, "或")
+docs <- tm_map(docs, toSpace, "拿")
+docs <- tm_map(docs, toSpace, "錯")
+docs <- tm_map(docs, toSpace, "月")
+docs <- tm_map(docs, toSpace, "下")
+docs <- tm_map(docs, toSpace, "實")
+docs <- tm_map(docs, toSpace, "對")
+docs <- tm_map(docs, toSpace, "以")
+docs <- tm_map(docs, toSpace, "找")
+docs <- tm_map(docs, toSpace, "長")
+docs <- tm_map(docs, toSpace, "被")
+docs <- tm_map(docs, toSpace, "讓")
+docs <- tm_map(docs, toSpace, "其實")
+docs <- tm_map(docs, toSpace, "話")
+docs <- tm_map(docs, toSpace, "腰")
+docs <- tm_map(docs, toSpace, "為")
+docs <- tm_map(docs, toSpace, "alex")
+docs <- tm_map(docs, toSpace, "nomoregret")
+docs <- tm_map(docs, toSpace, "aa")
+docs <- tm_map(docs, toSpace, "QQ")
+docs <- tm_map(docs, toSpace, "前")
+docs <- tm_map(docs, toSpace, "出")
+docs <- tm_map(docs, toSpace, "比")
+docs <- tm_map(docs, toSpace, "同")
+docs <- tm_map(docs, toSpace, "帥")
+docs <- tm_map(docs, toSpace, "其")
+docs <- tm_map(docs, toSpace, "兩")
+docs <- tm_map(docs, toSpace, "小")
+docs <- tm_map(docs, toSpace, "之")
+docs <- tm_map(docs, toSpace, "剛")
+docs <- tm_map(docs, toSpace, "他")
+docs <- tm_map(docs, toSpace, "文")
+docs <- tm_map(docs, toSpace, "洗")
+docs <- tm_map(docs, toSpace, "種")
+docs <- tm_map(docs, toSpace, "色落")
+docs <- tm_map(docs, toSpace, "與")
+docs <- tm_map(docs, toSpace, "算")
+docs <- tm_map(docs, toSpace, "腿")
+docs <- tm_map(docs, toSpace, "差")
+docs <- tm_map(docs, toSpace, "款")
+docs <- tm_map(docs, toSpace, "改")
+docs <- tm_map(docs, toSpace, "麼")
+docs <- tm_map(docs, toSpace, "問")
+docs <- tm_map(docs, toSpace, "牛仔")
+docs <- tm_map(docs, toSpace, "本")
+docs <- tm_map(docs, toSpace, "幾")
+docs <- tm_map(docs, toSpace, "給")
+docs <- tm_map(docs, toSpace, "先")
+docs <- tm_map(docs, toSpace, "腳")
+docs <- tm_map(docs, toSpace, "oz")
+docs <- tm_map(docs, toSpace, "wwwpttccbb")
+docs <- tm_map(docs, toSpace, "Tucano")
+docs <- tm_map(docs, toSpace, "RickyRubio")
+docs <- tm_map(docs, toSpace, "skinny")
+docs <- tm_map(docs, toSpace, "lostbook")
+docs <- tm_map(docs, toSpace, "客服")
+docs <- tm_map(docs, toSpace, "希望")
+docs <- tm_map(docs, toSpace, "怎")
+docs <- tm_map(docs, toSpace, "結果")
+docs <- tm_map(docs, toSpace, "便宜")
+docs <- tm_map(docs, toSpace, "折扣")
+docs <- tm_map(docs, toSpace, "更")
+docs <- tm_map(docs, toSpace, "各位")
+docs <- tm_map(docs, toSpace, "參考")
+#移除標點符號 (punctuation)
+#移除數字 (digits)、空白 (white space)
+docs <- tm_map(docs, removePunctuation)
+docs <- tm_map(docs, removeNumbers)
+docs <- tm_map(docs, stripWhitespace)
+
+
+
+mixseg = worker()
+segment <- c("N&F", "Naked&Famous")
+new_user_word(mixseg,segment)
+
+
+jieba_tokenizer=function(d){
+  unlist(segment(d[[1]],mixseg))
+}
+seg = lapply(docs, jieba_tokenizer)
+freqFrame = as.data.frame(table(unlist(seg)))
+```
+#畫出文字雲
+```{r}
+wordcloud(freqFrame$Var1,freqFrame$Freq,
+          scale=c(5,0.1),min.freq=30,max.words=150,
+          random.order=TRUE, random.color=FALSE, 
+          rot.per=.1, colors=brewer.pal(8, "Dark2"),
+          ordered.colors=FALSE,use.r.layout=FALSE,
+          fixed.asp=TRUE)
+```
+
+遇到的問題
+-------
+-想把中文全部篩掉，因為品牌名大多是英文
+-想統一大小寫，因為像levis和Levis不會重複計算出現頻率
+
+目標
+-------
+了解2018台灣鄉民討論熱度最高的牛仔褲品牌
+
+結論
+--------
+Nudie、Levis、N&F、TCB、Evisu是最常被提及的牌子
+
+想買TCB了
