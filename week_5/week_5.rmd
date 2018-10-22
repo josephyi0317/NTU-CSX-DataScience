@@ -1,0 +1,349 @@
+week_5
+=================
+動機
+-----------------
+最近很常聽陶吉吉早期的歌，就有點好奇他有沒有慣用的歌詞詞彙，還有他各個時期是不是愛用不同的詞彙?還是始終如
+
+一?晚期的歌變得商業化後歌詞有沒有變化?
+
+過程
+-----------------------
+
+讀取文檔
+````{r}
+getwd()
+path1 <- "C:/Users/joe/Documents/69樂章.txt"
+樂章 <- readLines(path1, encoding="utf8")
+樂章 <- iconv(樂章, "utf8", "big5")
+path4 <- "C:/Users/joe/Documents/I'm Ok.txt"
+ImOk<- readLines(path4, encoding="utf8")
+ImOk <- iconv(ImOk, "utf8", "big5")
+path6 <- "C:/Users/joe/Documents/太平盛世.txt"
+太平盛世<- readLines(path6, encoding="utf8")
+太平盛世 <- iconv(太平盛世, "utf8", "big5")
+path7 <- "C:/Users/joe/Documents/太美麗.txt"
+太美麗<- readLines(path7, encoding="utf8")
+太美麗 <- iconv(太美麗, "utf8", "big5")
+path8 <- "C:/Users/joe/Documents/再見你好嗎 Hello Goodbye.txt"
+再見你好嗎 <- readLines(path8, encoding="utf8")
+再見你好嗎 <- iconv(再見你好嗎, "utf8", "big5")
+path9 <- "C:/Users/joe/Documents/陶.txt"
+陶<- readLines(path9, encoding="utf8")
+陶<- iconv(陶, "utf8", "big5")
+path11 <- "C:/Users/joe/Documents/黑色星期二.txt"
+黑色星期二<- readLines(path11, encoding="utf8")
+黑色星期二<- iconv(黑色星期二, "utf8", "big5")
+path12 <- "C:/Users/joe/Documents/黑色柳丁.txt"
+黑色柳丁<- readLines(path12, encoding="utf8")
+黑色柳丁<- iconv(黑色柳丁, "utf8", "big5")
+path13 <- "C:/Users/joe/Documents/樂之路.txt"
+樂之路<- readLines(path13, encoding="utf8")
+樂之路<- iconv(樂之路, "utf8", "big5")
+``````
+
+處理一下，把一些不要的chr弄掉
+
+("吉吉"好像不適用big5和UTF8= =)，這邊來回弄了幾次，看tdm跑出來的結果再回來刪，但不知道為啥null刪不掉，
+不知道是那些東西轉成corpus時變null?
+```````{r}
+library(stringr)
+太平盛世 <- str_remove_all(太平盛世, "陶[?]")
+太美麗 <- str_remove_all(太美麗, "陶[?]")
+再見你好嗎 <- str_remove_all(再見你好嗎, "陶[?]")
+陶 <- str_remove_all(陶, "陶[?]")
+黑色星期二 <- str_remove_all(黑色星期二, "陶[?]")
+黑色柳丁 <- str_remove_all(黑色柳丁, "陶[?]")
+樂之路 <- str_remove_all(樂之路, "陶[?]")
+樂章 <- str_remove_all(樂章, "陶[?]")
+ImOk <- str_remove_all(ImOk, "陶[?]")
+太平盛世 <- str_remove_all(太平盛世, "陶???") 
+太美麗 <- str_remove_all(太美麗, "陶???")
+再見你好嗎 <- str_remove_all(再見你好嗎, "陶???")
+陶 <- str_remove_all(陶, "陶???")
+黑色星期二 <- str_remove_all(黑色星期二, "陶???")
+黑色柳丁 <- str_remove_all(黑色柳丁, "陶???")
+樂之路 <- str_remove_all(樂之路, "陶???")
+樂章 <- str_remove_all(樂章, "陶???")
+ImOk <- str_remove_all(ImOk, "陶???")
+太平盛世 <- str_remove_all(太平盛世, "null") 
+太美麗 <- str_remove_all(太美麗, "null")
+再見你好嗎 <- str_remove_all(再見你好嗎, "null")
+陶 <- str_remove_all(陶, "null")
+黑色星期二 <- str_remove_all(黑色星期二, "null")
+黑色柳丁 <- str_remove_all(黑色柳丁, "null")
+樂之路 <- str_remove_all(樂之路, "null")
+樂章 <- str_remove_all(樂章, "null")
+ImOk <- str_remove_all(ImOk, "null")
+太平盛世 <- str_remove_all(太平盛世, "作詞")
+太平盛世 <- str_remove_all(太平盛世, "作曲")
+太平盛世 <- str_remove_all(太平盛世, "娃娃")
+太美麗 <- str_remove_all(太美麗, "作詞")
+太美麗 <- str_remove_all(太美麗, "作曲")
+太美麗 <- str_remove_all(太美麗, "娃娃")
+再見你好嗎 <- str_remove_all(再見你好嗎, "作詞")
+再見你好嗎 <- str_remove_all(再見你好嗎, "作曲")
+再見你好嗎 <- str_remove_all(再見你好嗎, "娃娃")
+陶 <- str_remove_all(陶, "作詞")
+陶 <- str_remove_all(陶, "作曲")
+陶 <- str_remove_all(陶, "娃娃")
+黑色星期二 <- str_remove_all(黑色星期二, "作詞")
+黑色星期二 <- str_remove_all(黑色星期二, "作曲")
+黑色星期二 <- str_remove_all(黑色星期二, "娃娃")
+黑色柳丁 <- str_remove_all(黑色柳丁, "作詞")
+黑色柳丁 <- str_remove_all(黑色柳丁, "作曲")
+黑色柳丁 <- str_remove_all(黑色柳丁, "娃娃")
+樂之路 <- str_remove_all(樂之路, "作詞")
+樂之路 <- str_remove_all(樂之路, "作曲")
+樂之路 <- str_remove_all(樂之路, "娃娃")
+樂章 <- str_remove_all(樂章, "作詞")
+樂章 <- str_remove_all(樂章, "作曲")
+樂章 <- str_remove_all(樂章, "娃娃")
+ImOk <- str_remove_all(ImOk, "作詞")
+ImOk <- str_remove_all(ImOk, "作曲")
+ImOk <- str_remove_all(ImOk, "娃娃")
+
+太平盛世 <- str_remove_all(太平盛世, "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+太美麗 <- str_remove_all(太美麗,  "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+再見你好嗎 <- str_remove_all(再見你好嗎, "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+陶 <- str_remove_all(陶, "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+黑色星期二 <- str_remove_all(黑色星期二, "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+黑色柳丁 <- str_remove_all(黑色柳丁, "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+樂之路 <- str_remove_all(樂之路, "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+樂章 <- str_remove_all(樂章, "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+ImOk <- str_remove_all(ImOk, "更多更詳盡歌詞 在 ※ Mojim.com　魔鏡歌詞網 ")
+
+陶 <-陶[Encoding(陶)!='unknown']
+ImOk <-ImOk[Encoding(ImOk)!='unknown']
+黑色柳丁 <-黑色柳丁[Encoding(黑色柳丁)!='unknown']
+樂之路 <-樂之路[Encoding(樂之路)!='unknown']
+太平盛世 <-太平盛世[Encoding(太平盛世)!='unknown']
+太美麗 <-太美麗[Encoding(太美麗)!='unknown']
+樂章 <-樂章[Encoding(樂章)!='unknown']
+再見你好嗎 <-再見你好嗎[Encoding(再見你好嗎)!='unknown']
+黑色星期二 <-黑色星期二[Encoding(黑色星期二)!='unknown']
+albums <- list(陶=陶, Imok=ImOk, 黑色柳丁=黑色柳丁, 樂之路=樂之路, 太平盛世=太平盛世, 太美麗=太美麗, 樂章=樂章, 再見你好嗎=再見你好嗎, 黑色星期二=黑色星期二)
+``````````
+
+把9張專輯合在一起
+
+做出一般tdm和以tfidf做權重的tdm
+```````{r}
+library(tm)
+library(ggplot2)
+library(tmcn)
+Sys.setenv(JAVA_HOME="C:/Program Files/Java/jdk-11.0.1")
+library("rJava")
+library(Rwordseg)
+albums <- Corpus(VectorSource(albums))
+albums <- tm_map(albums, segmentCN, nature = TRUE)
+tdm <- TermDocumentMatrix(albums, control = list(wordLengths = c(5, Inf), weighting = weightTfIdf))
+inspect(tdm)
+tdmx <- TermDocumentMatrix(albums, control = list(wordLengths = c(5, Inf)))
+inspect(tdmx)
+freq=rowSums(as.matrix(tdm))
+tail(sort(freq),n=10)
+high.freq=tail(sort(freq),n=10)
+hfp.df=as.data.frame(sort(high.freq))
+hfp.df$names <- rownames(hfp.df) 
+
+ggplot(hfp.df, aes(reorder(names,high.freq), high.freq)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+freqx=rowSums(as.matrix(tdmx))
+tail(sort(freqx),n=10)
+high.freqx=tail(sort(freqx),n=10)
+hfp.dfx=as.data.frame(sort(high.freqx))
+hfp.dfx$names <- rownames(hfp.dfx) 
+
+ggplot(hfp.dfx, aes(reorder(names,high.freqx), high.freqx)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+``````
+
+做出個別專輯的tdm
+
+陶吉吉
+``````{r}
+corpus1 <- Corpus(VectorSource(陶))
+corpus1 <- tm_map(corpus1, segmentCN, nature = TRUE)
+tdm1 <- TermDocumentMatrix(corpus1, control = list(wordLengths = c(3, Inf)))
+inspect(tdm1)
+freq1=rowSums(as.matrix(tdm1))
+tail(sort(freq1),n=10)
+high.freq1=tail(sort(freq1),n=10)
+hfp.df1=as.data.frame(sort(high.freq1))
+hfp.df1$names <- rownames(hfp.df1) 
+
+ggplot(hfp.df1, aes(reorder(names,high.freq1), high.freq1)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+``````
+
+Imok
+``````````{r}
+corpus2 <- Corpus(VectorSource(ImOk))
+corpus2 <- tm_map(corpus2, segmentCN, nature = TRUE)
+tdm2 <- TermDocumentMatrix(corpus2, control = list(wordLengths = c(4, Inf)))
+inspect(tdm2)
+freq2=rowSums(as.matrix(tdm2))
+tail(sort(freq2),n=10)
+high.freq2=tail(sort(freq2),n=10)
+hfp.df2=as.data.frame(sort(high.freq2))
+hfp.df2$names <- rownames(hfp.df2) 
+
+ggplot(hfp.df2, aes(reorder(names,high.freq2), high.freq2)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+``````
+
+黑色柳丁
+``````{r}
+corpus3 <- Corpus(VectorSource(黑色柳丁))
+corpus3 <- tm_map(corpus3, segmentCN, nature = TRUE)
+tdm3 <- TermDocumentMatrix(corpus3, control = list(wordLengths = c(3, Inf)))
+inspect(tdm3)
+freq3=rowSums(as.matrix(tdm3))
+tail(sort(freq3),n=10)
+high.freq3=tail(sort(freq3),n=10)
+hfp.df3=as.data.frame(sort(high.freq3))
+hfp.df3$names <- rownames(hfp.df3) 
+
+ggplot(hfp.df3, aes(reorder(names,high.freq3), high.freq3)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+``````
+
+樂之路
+````````{r}
+corpus4 <- Corpus(VectorSource(樂之路))
+corpus4 <- tm_map(corpus4, segmentCN, nature = TRUE)
+tdm4 <- TermDocumentMatrix(corpus4, control = list(wordLengths = c(4, Inf)))
+inspect(tdm4)
+freq4=rowSums(as.matrix(tdm4))
+tail(sort(freq4),n=10)
+high.freq4=tail(sort(freq4),n=10)
+hfp.df4=as.data.frame(sort(high.freq4))
+hfp.df4$names <- rownames(hfp.df4) 
+
+ggplot(hfp.df4, aes(reorder(names,high.freq4), high.freq4)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+```````
+
+太平盛世
+``````{r}
+corpus5 <- Corpus(VectorSource(太平盛世))
+corpus5 <- tm_map(corpus5, segmentCN, nature = TRUE)
+tdm5 <- TermDocumentMatrix(corpus5, control = list(wordLengths = c(4, Inf)))
+inspect(tdm5)
+freq5=rowSums(as.matrix(tdm5))
+tail(sort(freq5),n=10)
+high.freq5=tail(sort(freq5),n=10)
+hfp.df5=as.data.frame(sort(high.freq5))
+hfp.df5$names <- rownames(hfp.df5) 
+
+ggplot(hfp.df5, aes(reorder(names,high.freq5), high.freq5)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+`````````
+
+太美麗
+``````{r}
+corpus6 <- Corpus(VectorSource(太美麗))
+corpus6 <- tm_map(corpus6, segmentCN, nature = TRUE)
+tdm6 <- TermDocumentMatrix(corpus6, control = list(wordLengths = c(4, Inf)))
+inspect(tdm6)
+freq6=rowSums(as.matrix(tdm6))
+tail(sort(freq6),n=10)
+high.freq6=tail(sort(freq6),n=10)
+hfp.df6=as.data.frame(sort(high.freq6))
+hfp.df6$names <- rownames(hfp.df6) 
+
+ggplot(hfp.df6, aes(reorder(names,high.freq6), high.freq6)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+````````
+
+樂章
+````````{r}
+corpus7 <- Corpus(VectorSource(樂章))
+corpus7 <- tm_map(corpus7, segmentCN, nature = TRUE)
+tdm7 <- TermDocumentMatrix(corpus7, control = list(wordLengths = c(4, Inf)))
+inspect(tdm7)
+freq7=rowSums(as.matrix(tdm7))
+tail(sort(freq7),n=10)
+high.freq7=tail(sort(freq7),n=10)
+hfp.df7=as.data.frame(sort(high.freq7))
+hfp.df7$names <- rownames(hfp.df7) 
+
+ggplot(hfp.df7, aes(reorder(names,high.freq7), high.freq7)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+`````````
+
+再見你好嗎
+```````{r}
+corpus8 <- Corpus(VectorSource(再見你好嗎))
+corpus8 <- tm_map(corpus8, segmentCN, nature = TRUE)
+tdm8 <- TermDocumentMatrix(corpus8, control = list(wordLengths = c(4, Inf)))
+inspect(tdm8)
+freq8=rowSums(as.matrix(tdm8))
+tail(sort(freq8),n=10)
+high.freq8=tail(sort(freq8),n=10)
+hfp.df8=as.data.frame(sort(high.freq8))
+hfp.df8$names <- rownames(hfp.df8) 
+
+ggplot(hfp.df8, aes(reorder(names,high.freq8), high.freq8)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+```````
+
+黑色星期二
+````````{r}
+corpus9 <- Corpus(VectorSource(黑色星期二))
+corpus9 <- tm_map(corpus9, segmentCN, nature = TRUE)
+tdm9 <- TermDocumentMatrix(corpus9, control = list(wordLengths = c(4, Inf)))
+inspect(tdm9)
+freq9=rowSums(as.matrix(tdm9))
+tail(sort(freq9),n=10)
+high.freq9=tail(sort(freq9),n=10)
+hfp.df9=as.data.frame(sort(high.freq9))
+hfp.df9$names <- rownames(hfp.df9) 
+
+ggplot(hfp.df9, aes(reorder(names,high.freq9), high.freq9)) +
+  geom_bar(stat="identity") + coord_flip() + 
+  xlab("Terms") + ylab("Frequency") +
+  ggtitle("Term frequencies")
+````````
+
+觀察結果
+-------------------------
+"為什麼"、"自己"、"沒有"似乎是他愛用的歌詞，看來是個對自己和他人都充滿不確定性且對沒有的事物十分敏感的
+歌手呢!(just joking)
+這些詞在他的所有專輯裡幾乎都有出現，看來還是維持著一定的一致性。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
