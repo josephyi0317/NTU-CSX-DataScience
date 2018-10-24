@@ -1,0 +1,6 @@
+week_5詞頻矩陣與文字資料視覺化
+======================================  
+>>Term to Document Matrix, , pca
+>>TF-IDF  
+>>EDA  
+>>文字探勘PIPELINE
