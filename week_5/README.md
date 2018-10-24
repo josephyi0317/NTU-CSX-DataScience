@@ -6,4 +6,4 @@ week_5
 >>EDA  
 >>文字探勘PIPELINE  
 2.excercise  
->>https://josephyi0317.github.io/NTU-CSX-DataScience/week_5.html
+>>https://josephyi0317.github.io/NTU-CSX-DataScience/week_5/week_5.html
