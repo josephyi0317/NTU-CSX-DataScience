@@ -1,0 +1,618 @@
+WEEK_6
+
+NBA MATCH
+================================
+動機
+-----------------------------------
+想贏錢XD 但不想每天看那麼多數據
+
+```````{R  error=TRUE}
+#使用RSelenium抓取NBA STATS上的資料
+#連結伺服器
+
+library("RSelenium")
+remDr <- remoteDriver(
+  remoteServerAddr = "127.0.0.1",
+  port = 4444,
+  browserName = "chrome")
+remDr$open()
+
+#各隊進攻率和防守率的抓取(df.a)
+remDr$navigate("https://stats.nba.com/teams/advanced/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season&LastNGames=15")
+web.elem.list <- remDr$findElements(using = 'css selector', value = ".first , td:nth-child(8) , td:nth-child(7)")
+df1 <- data.frame(unlist(lapply(web.elem.list, function(e) { e$getElementText() })))
+c1 <- c(2,5,8,11,14,17,20,23,26,29,32,35,38,41,44,47,50,53,56,59,62,65,68,71,74,77,80,83,86,89)
+
+
+df.a <- data.frame( df1[c1-1, ], df1[c1, ], df1[c1+1, ])
+names(df.a)[1] <- "Team"
+names(df.a)[2] <- "off.rate"
+names(df.a)[3] <- "def.rate"
+df.a
+
+#各隊詳細數據抓取(3pt,PITP,OFFTO,FBPS)(df.b)
+remDr$navigate("https://stats.nba.com/teams/misc/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season")
+web.elem.list1 <- remDr$findElements(using = 'css selector', value = "td:nth-child(13) , td:nth-child(14) , td:nth-child(11) , td:nth-child(10) , td:nth-child(9) , td:nth-child(7) , .sorted , .asc:nth-child(7) , .asc:nth-child(9) , .asc:nth-child(10) , .asc:nth-child(11) , .asc:nth-child(13) , .asc:nth-child(14)")
+df2 <- data.frame(unlist(lapply(web.elem.list1, function(e) { e$getElementText() })))
+c2 <- c(2,9,16,23,30,37,44,51,58,65,72,79,86,93,100,107,114,121,128,135,142,149,156,163,170,177,184,191,198,205)
+df.b <- data.frame (df2[c2, ], df2[c2+1, ], df2[c2+2, ],df2[c2+3, ],df2[c2+4, ],df2[c2+5, ],df2[c2+6, ])
+names(df.b)[1] <- "Team"
+names(df.b)[2] <- "PTS OFF TO"
+names(df.b)[3] <- "FBPS"
+names(df.b)[4] <- "PITP"
+names(df.b)[5] <- "OPP PTS OFF TO"
+names(df.b)[6] <- "OPP FBPS"
+names(df.b)[7] <- "OPP PITP"
+
+
+c3 <- c(1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59)
+remDr$navigate("https://stats.nba.com/teams/advanced/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season")
+web.elem.list2 <- remDr$findElements(using = 'css selector', value = " td:nth-child(13), td:nth-child(14)")
+df3 <- data.frame(unlist(lapply(web.elem.list2, function(e) { e$getElementText() })))
+df3 <- data.frame(df3[c3, ], df3[c3+1, ])
+
+df.b <- cbind(df.b, df3[ ,1:2])
+names(df.b)[8] <- "OREB%"
+names(df.b)[9] <- "DREB%"
+
+
+remDr$navigate("https://stats.nba.com/teams/traditional/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season")
+web.elem.list3 <- remDr$findElements(using = 'css selector', value = "tr :nth-child(12)")
+df4 <- data.frame(unlist(lapply(web.elem.list3, function(e) { e$getElementText() })))
+df4 <- df4[-1, ]
+df.b <- cbind(df.b, df4)
+names(df.b)[10] <- "3PM"
+
+remDr$navigate("https://stats.nba.com/teams/opponent/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season")
+web.elem.list4 <- remDr$findElements(using = 'css selector', value = "td:nth-child(10)")
+df5 <- data.frame(unlist(lapply(web.elem.list4, function(e) { e$getElementText() })))
+df.b <- cbind(df.b, df5)
+names(df.b)[11] <- "OPP 3PM"
+df.b
+
+#主客場得分抓取(df.c)
+
+remDr$navigate("https://stats.nba.com/teams/traditional/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season&Location=Home")
+web.elem.list5 <- remDr$findElements(using = 'css selector', value = "td:nth-child(8)")
+df6 <- data.frame(unlist(lapply(web.elem.list5, function(e) { e$getElementText() })))
+
+
+
+remDr$navigate("https://stats.nba.com/teams/traditional/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season&Location=Road")
+web.elem.list6 <- remDr$findElements(using = 'css selector', value = "td:nth-child(8)")
+df7 <- data.frame(unlist(lapply(web.elem.list6, function(e) { e$getElementText() })))
+
+remDr$navigate("https://stats.nba.com/teams/traditional/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season")
+web.elem.list7 <- remDr$findElements(using = 'css selector', value = "td:nth-child(8) , .first")
+df8 <- data.frame(unlist(lapply(web.elem.list7, function(e) { e$getElementText() })))
+df8 <- df8[c(1:60), ]
+df.c <- data.frame(df8[c3], df8[c3+1])
+df.c <- cbind(df.c, df7, df6)
+names(df.c)[1] <- "Team"
+names(df.c)[2] <- "PTS"
+names(df.c)[3] <- "ROADPTS"
+names(df.c)[4] <- "HOMEPTS"
+df.c
+
+#近十場勝率抓取(df.d)
+  
+remDr$navigate("https://stats.nba.com/teams/traditional/?sort=TEAM_NAME&dir=-1&Season=2018-19&SeasonType=Regular%20Season&LastNGames=10")
+web.elem.list8 <- remDr$findElements(using = 'css selector', value = "td:nth-child(6) , .sorted a")
+df9 <- data.frame(unlist(lapply(web.elem.list8, function(e) { e$getElementText() })))
+df9 <- df9[c(1:60), ]
+df.d <- data.frame(df9[c3], df9[c3+1])
+names(df.d)[1] <- "Team"
+names(df.d)[2] <- "win"
+df.d
+#各隊對戰組合資料抓取
+
+remDr$navigate("https://stats.nba.com/team/1610612749/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list9 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfMIL <- data.frame(unlist(lapply(web.elem.list9, function(e) { e$getElementText() })))
+web.elem.list10 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfMIL2 <- data.frame(unlist(lapply(web.elem.list10, function(e) { e$getElementText() })))
+dfMIL2<- dfMIL2[-c(1:nrow(dfMIL2)/2), ]
+dfMIL <- cbind(dfMIL2, dfMIL)
+names(dfMIL)[1] <- "Team"
+names(dfMIL)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612737/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list11 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfATL <- data.frame(unlist(lapply(web.elem.list11, function(e) { e$getElementText() })))
+web.elem.list12 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfATL2 <- data.frame(unlist(lapply(web.elem.list12, function(e) { e$getElementText() })))
+dfATL2<- dfATL2[-c(1:nrow(dfATL2)/2), ]
+dfATL <- cbind(dfATL2, dfATL)
+names(dfATL)[1] <- "Team"
+names(dfATL)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612738/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list13 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfCLT <- data.frame(unlist(lapply(web.elem.list13, function(e) { e$getElementText() })))
+web.elem.list14 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfCLT2 <- data.frame(unlist(lapply(web.elem.list14, function(e) { e$getElementText() })))
+dfCLT2<- dfCLT2[-c(1:nrow(dfCLT2)/2), ]
+dfCLT <- cbind(dfCLT2, dfCLT)
+names(dfCLT)[1] <- "Team"
+names(dfCLT)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612751/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list15 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfBKN <- data.frame(unlist(lapply(web.elem.list15, function(e) { e$getElementText() })))
+web.elem.list16 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfBKN2 <- data.frame(unlist(lapply(web.elem.list16, function(e) { e$getElementText() })))
+dfBKN2<- dfBKN2[-c(1:nrow(dfBKN2)/2), ]
+dfBKN <- cbind(dfBKN2, dfBKN)
+names(dfBKN)[1] <- "Team"
+names(dfBKN)[2] <- "PTS"
+ 
+remDr$navigate("https://stats.nba.com/team/1610612766/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list17 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfCHA <- data.frame(unlist(lapply(web.elem.list17, function(e) { e$getElementText() })))
+web.elem.list18 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfCHA2 <- data.frame(unlist(lapply(web.elem.list18, function(e) { e$getElementText() })))
+dfCHA2<- dfCHA2[-c(1:nrow(dfCHA2)/2), ]
+dfCHA <- cbind(dfCHA2, dfCHA)
+names(dfCHA)[1] <- "Team"
+names(dfCHA)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612741/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list19 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfCHI <- data.frame(unlist(lapply(web.elem.list19, function(e) { e$getElementText() })))
+web.elem.list20 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfCHI2 <- data.frame(unlist(lapply(web.elem.list20, function(e) { e$getElementText() })))
+dfCHI2<- dfCHI2[-c(1:nrow(dfCHI2)/2), ]
+dfCHI <- cbind(dfCHI2, dfCHI)
+names(dfCHI)[1] <- "Team"
+names(dfCHI)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612739/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list21 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfCAV <- data.frame(unlist(lapply(web.elem.list21, function(e) { e$getElementText() })))
+web.elem.list22 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfCAV2 <- data.frame(unlist(lapply(web.elem.list22, function(e) { e$getElementText() })))
+dfCAV2<- dfCAV2[-c(1:nrow(dfCAV2)/2), ]
+dfCAV <- cbind(dfCAV2, dfCAV)
+names(dfCAV)[1] <- "Team"
+names(dfCAV)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612742/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list23 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfDAL <- data.frame(unlist(lapply(web.elem.list23, function(e) { e$getElementText() })))
+web.elem.list24 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfDAL2 <- data.frame(unlist(lapply(web.elem.list24, function(e) { e$getElementText() })))
+dfDAL2<- dfDAL2[-c(1:nrow(dfDAL2)/2), ]
+dfDAL <- cbind(dfDAL2, dfDAL)
+names(dfDAL)[1] <- "Team"
+names(dfDAL)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612743/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list25 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfDEN <- data.frame(unlist(lapply(web.elem.list25, function(e) { e$getElementText() })))
+web.elem.list26 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfDEN2 <- data.frame(unlist(lapply(web.elem.list26, function(e) { e$getElementText() })))
+dfDEN2<- dfDEN2[-c(1:nrow(dfDEN2)/2), ]
+dfDEN <- cbind(dfDEN2, dfDEN)
+names(dfDEN)[1] <- "Team"
+names(dfDEN)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612765/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list27 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfDET <- data.frame(unlist(lapply(web.elem.list27, function(e) { e$getElementText() })))
+web.elem.list28 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfDET2 <- data.frame(unlist(lapply(web.elem.list28, function(e) { e$getElementText() })))
+dfDET2<- dfDET2[-c(1:nrow(dfDET2)/2), ]
+dfDET <- cbind(dfDET2, dfDET)
+names(dfDET)[1] <- "Team"
+names(dfDET)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612744/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list29 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfGSW <- data.frame(unlist(lapply(web.elem.list29, function(e) { e$getElementText() })))
+web.elem.list30 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfGSW2 <- data.frame(unlist(lapply(web.elem.list30, function(e) { e$getElementText() })))
+dfGSW2<- dfGSW2[-c(1:nrow(dfGSW2)/2), ]
+dfGSW <- cbind(dfGSW2, dfGSW)
+names(dfGSW)[1] <- "Team"
+names(dfGSW)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612745/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list31 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfHOU <- data.frame(unlist(lapply(web.elem.list31, function(e) { e$getElementText() })))
+web.elem.list32 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfHOU2 <- data.frame(unlist(lapply(web.elem.list32, function(e) { e$getElementText() })))
+dfHOU2<- dfHOU2[-c(1:nrow(dfHOU2)/2), ]
+dfHOU <- cbind(dfHOU2, dfHOU)
+names(dfHOU)[1] <- "Team"
+names(dfHOU)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612754/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list33 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfIND <- data.frame(unlist(lapply(web.elem.list33, function(e) { e$getElementText() })))
+web.elem.list34 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfIND2 <- data.frame(unlist(lapply(web.elem.list34, function(e) { e$getElementText() })))
+dfIND2<- dfIND2[-c(1:nrow(dfIND2)/2), ]
+dfIND <- cbind(dfIND2, dfIND)
+names(dfIND)[1] <- "Team"
+names(dfIND)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612746/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list35 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfLAC <- data.frame(unlist(lapply(web.elem.list35, function(e) { e$getElementText() })))
+web.elem.list36 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfLAC2 <- data.frame(unlist(lapply(web.elem.list36, function(e) { e$getElementText() })))
+dfLAC2<- dfLAC2[-c(1:nrow(dfLAC2)/2), ]
+dfLAC <- cbind(dfLAC2, dfLAC)
+names(dfLAC)[1] <- "Team"
+names(dfLAC)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612747/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list37 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfLAL <- data.frame(unlist(lapply(web.elem.list37, function(e) { e$getElementText() })))
+web.elem.list38 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfLAL2 <- data.frame(unlist(lapply(web.elem.list38, function(e) { e$getElementText() })))
+dfLAL2<- dfLAL2[-c(1:nrow(dfLAL2)/2), ]
+dfLAL <- cbind(dfLAL2, dfLAL)
+names(dfLAL)[1] <- "Team"
+names(dfLAL)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612763/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list39 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfMEM <- data.frame(unlist(lapply(web.elem.list39, function(e) { e$getElementText() })))
+web.elem.list40 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfMEM2 <- data.frame(unlist(lapply(web.elem.list40, function(e) { e$getElementText() })))
+dfMEM2<- dfMEM2[-c(1:nrow(dfMEM2)/2), ]
+dfMEM <- cbind(dfMEM2, dfMEM)
+names(dfMEM)[1] <- "Team"
+names(dfMEM)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612748/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list41 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfMIA <- data.frame(unlist(lapply(web.elem.list41, function(e) { e$getElementText() })))
+web.elem.list42 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfMIA2 <- data.frame(unlist(lapply(web.elem.list42, function(e) { e$getElementText() })))
+dfMIA2<- dfMIA2[-c(1:nrow(dfMIA2)/2), ]
+dfMIA <- cbind(dfMIA2, dfMIA)
+names(dfMIA)[1] <- "Team"
+names(dfMIA)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612750/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list43 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfMIN <- data.frame(unlist(lapply(web.elem.list43, function(e) { e$getElementText() })))
+web.elem.list44 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfMIN2 <- data.frame(unlist(lapply(web.elem.list44, function(e) { e$getElementText() })))
+dfMIN2<- dfMIN2[-c(1:nrow(dfMIN2)/2), ]
+dfMIN <- cbind(dfMIN2, dfMIN)
+names(dfMIN)[1] <- "Team"
+names(dfMIN)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612740/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list45 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfNOR <- data.frame(unlist(lapply(web.elem.list45, function(e) { e$getElementText() })))
+web.elem.list46 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfNOR2 <- data.frame(unlist(lapply(web.elem.list46, function(e) { e$getElementText() })))
+dfNOR2<- dfNOR2[-c(1:nrow(dfNOR2)/2), ]
+dfNOR <- cbind(dfNOR2, dfNOR)
+names(dfNOR)[1] <- "Team"
+names(dfNOR)[2] <- "PTS"
+
+
+
+remDr$navigate("https://stats.nba.com/team/1610612752/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list47 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfNYK <- data.frame(unlist(lapply(web.elem.list47, function(e) { e$getElementText() })))
+web.elem.list48 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfNYK2 <- data.frame(unlist(lapply(web.elem.list48, function(e) { e$getElementText() })))
+dfNYK2<- dfNYK2[-c(1:nrow(dfNYK2)/2), ]
+dfNYK <- cbind(dfNYK2, dfNYK)
+names(dfNYK)[1] <- "Team"
+names(dfNYK)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612760/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list49 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfOKC <- data.frame(unlist(lapply(web.elem.list49, function(e) { e$getElementText() })))
+web.elem.list50 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfOKC2 <- data.frame(unlist(lapply(web.elem.list50, function(e) { e$getElementText() })))
+dfOKC2<- dfOKC2[-c(1:nrow(dfOKC2)/2), ]
+dfOKC <- cbind(dfOKC2, dfOKC)
+names(dfOKC)[1] <- "Team"
+names(dfOKC)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612753/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list51 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfORL <- data.frame(unlist(lapply(web.elem.list51, function(e) { e$getElementText() })))
+web.elem.list52 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfORL2 <- data.frame(unlist(lapply(web.elem.list52, function(e) { e$getElementText() })))
+dfORL2<- dfORL2[-c(1:nrow(dfORL2)/2), ]
+dfORL <- cbind(dfORL2, dfORL)
+names(dfORL)[1] <- "Team"
+names(dfORL)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612755/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list53 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfPHI <- data.frame(unlist(lapply(web.elem.list53, function(e) { e$getElementText() })))
+web.elem.list54 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfPHI2 <- data.frame(unlist(lapply(web.elem.list54, function(e) { e$getElementText() })))
+dfPHI2<- dfPHI2[-c(1:nrow(dfPHI2)/2), ]
+dfPHI <- cbind(dfPHI2, dfPHI)
+names(dfPHI)[1] <- "Team"
+names(dfPHI)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612756/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list55 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfPHX <- data.frame(unlist(lapply(web.elem.list55, function(e) { e$getElementText() })))
+web.elem.list56 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfPHX2 <- data.frame(unlist(lapply(web.elem.list56, function(e) { e$getElementText() })))
+dfPHX2<- dfPHX2[-c(1:nrow(dfPHX2)/2), ]
+dfPHX <- cbind(dfPHX2, dfPHX)
+names(dfPHX)[1] <- "Team"
+names(dfPHX)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612757/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list57 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfPTL <- data.frame(unlist(lapply(web.elem.list57, function(e) { e$getElementText() })))
+web.elem.list58 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfPTL2 <- data.frame(unlist(lapply(web.elem.list58, function(e) { e$getElementText() })))
+dfPTL2<- dfPTL2[-c(1:nrow(dfPTL2)/2), ]
+dfPTL <- cbind(dfPTL2, dfPTL)
+names(dfPTL)[1] <- "Team"
+names(dfPTL)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612758/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list59 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfSAC <- data.frame(unlist(lapply(web.elem.list59, function(e) { e$getElementText() })))
+web.elem.list60 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfSAC2 <- data.frame(unlist(lapply(web.elem.list60, function(e) { e$getElementText() })))
+dfSAC2<- dfSAC2[-c(1:nrow(dfSAC2)/2), ]
+dfSAC <- cbind(dfSAC2, dfSAC)
+names(dfSAC)[1] <- "Team"
+names(dfSAC)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612759/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list61 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfSAN <- data.frame(unlist(lapply(web.elem.list61, function(e) { e$getElementText() })))
+web.elem.list62 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfSAN2 <- data.frame(unlist(lapply(web.elem.list62, function(e) { e$getElementText() })))
+dfSAN2<- dfSAN2[-c(1:nrow(dfSAN2)/2), ]
+dfSAN <- cbind(dfSAN2, dfSAN)
+names(dfSAN)[1] <- "Team"
+names(dfSAN)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612761/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list63 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfTOR <- data.frame(unlist(lapply(web.elem.list63, function(e) { e$getElementText() })))
+web.elem.list64 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfTOR2 <- data.frame(unlist(lapply(web.elem.list64, function(e) { e$getElementText() })))
+dfTOR2<- dfTOR2[-c(1:nrow(dfTOR2)/2), ]
+dfTOR <- cbind(dfTOR2, dfTOR)
+names(dfTOR)[1] <- "Team"
+names(dfTOR)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612762/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list65 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfUTA <- data.frame(unlist(lapply(web.elem.list65, function(e) { e$getElementText() })))
+web.elem.list66 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfUTA2 <- data.frame(unlist(lapply(web.elem.list66, function(e) { e$getElementText() })))
+dfUTA2<- dfUTA2[-c(1:nrow(dfUTA2)/2), ]
+dfUTA <- cbind(dfUTA2, dfUTA)
+names(dfUTA)[1] <- "Team"
+names(dfUTA)[2] <- "PTS"
+
+remDr$navigate("https://stats.nba.com/team/1610612764/traditional/?Season=2018-19&SeasonType=Regular%20Season&Split=opp")
+web.elem.list67 <- remDr$findElements(using = 'css selector', value = " nba-stat-table:nth-child(13) td:nth-child(4)")
+dfWAS <- data.frame(unlist(lapply(web.elem.list67, function(e) { e$getElementText() })))
+web.elem.list68 <- remDr$findElements(using = 'css selector', value = "nba-stat-table:nth-child(13) td.first")
+dfWAS2 <- data.frame(unlist(lapply(web.elem.list68, function(e) { e$getElementText() })))
+dfWAS2<- dfWAS2[-c(1:nrow(dfWAS2)/2), ]
+dfWAS <- cbind(dfWAS2, dfWAS)
+names(dfWAS)[1] <- "Team"
+names(dfWAS)[2] <- "PTS"
+``````````
+
+抓完資料後，開始計算
+
+
+``````````````{R  error=TRUE}
+#決定對戰組合
+  
+Team1 <- "放入主場隊"
+Team1.b <- "放入客場隊"
+
+AVE <- subset(df.c, Team ==Team1)[, 2]
+AVE <- as.numeric(as.character(AVE))
+Teams <- list(dfATL,dfCLT,dfBKN,dfCHA,dfCHI,dfCAV,dfDAL,dfDEN,dfDET,dfGSW,dfHOU,dfIND,dfLAC,dfLAL,dfMEM,dfMIA,dfMIL,dfMIN,dfNOR,dfNYK,dfOKC,dfORL,dfPHI,dfPHX,dfPTL,dfSAC,dfSAN,dfTOR,dfUTA,dfWAS)
+names(Teams) <- c("Atlanta Hawks", "Boston Celtics", "Brooklyn Nets", "Charlotte Hornets", "Chicago Bulls", "Cleveland Cavaliers", "Dallas Mavericks",  "Denver Nuggets", "Detroit Pistons", "Golden State Warriors", "Houston Rockets", "Indiana Pacers", "LA Clippers", "Los Angeles Lakers", "Memphis Grizzlies",  "Miami Heat", "Milwaukee Bucks", "Minnesota Timberwolves", "New Orleans Pelicans", "New York Knicks", "Oklahoma City Thunder", "Orlando Magic", "Philadelphia 76ers", "Phoenix Suns", "Portland Trail Blazers", "Sacramento Kings", "San Antonio Spurs", "Toronto Raptors", "Utah Jazz", "Washington Wizards") 
+Team1opp <- Teams[[Team1]]
+
+#建立主場隊的DATA做回歸
+vectorTeams1 <- as.vector(Team1opp[,"Team"])
+DATA3PT <- data.frame(matrix(NA,0,1))
+DATAFBPS <- data.frame(matrix(NA,0,1))
+DATAOFFTO <- data.frame(matrix(NA,0,1))
+DATAPITP <- data.frame(matrix(NA,0,1))
+DATAPTSDIF <- data.frame(matrix(NA,0,1))
+
+for (i in vectorTeams1){
+  Team2 = i
+  #3PT
+  my3PM <- subset(df.b, Team == Team1)[, 10]
+  opp3PT <- subset(df.b, Team == Team2)[, 11]
+  my3PT <- subset(df.b, Team == Team1)[, 11]
+  opp3PM <- subset(df.b, Team == Team2)[, 10]
+  X.3PT <- (as.numeric(as.character(my3PM))+as.numeric(as.character(opp3PT)))-(as.numeric(as.character(opp3PM))+as.numeric(as.character(my3PT)))
+  #FBPS
+  myFBPSM <- subset(df.b, Team == Team1)[, 3]
+  oppFBPS <- subset(df.b, Team == Team2)[, 6]
+  myFBPS <- subset(df.b, Team == Team1)[, 6]
+  oppFBPSM <- subset(df.b, Team == Team2)[, 3]
+  X.FBPS <- (as.numeric(as.character(myFBPSM))+as.numeric(as.character(oppFBPS)))-(as.numeric(as.character(myFBPS))+as.numeric(as.character(oppFBPSM)))
+  #OFFTO
+  myOFFTOM <- subset(df.b, Team ==Team1)[, 2]
+  oppOFFTO <- subset(df.b, Team ==Team2)[, 5]
+  myOFFTO <-subset(df.b, Team ==Team1)[, 5]
+  oppOFFTOM <- subset(df.b, Team == Team2)[, 2]
+  X.OFFTO <- (as.numeric(as.character(myOFFTOM))+as.numeric(as.character(oppOFFTO)))-(as.numeric(as.character(myOFFTO))+as.numeric(as.character(oppOFFTOM)))
+  #PITP
+  myPITPM <- subset(df.b, Team ==Team1)[, 4]
+  oppPITP <- subset(df.b, Team ==Team2)[, 7]
+  myPITP <-subset(df.b, Team ==Team1)[, 7]
+  oppPITPM <- subset(df.b, Team == Team2)[, 4]
+  X.PITP <- (as.numeric(as.character(myPITPM))+as.numeric(as.character(oppPITP)))-(as.numeric(as.character(myPITP))+as.numeric(as.character(oppPITPM)))
+  #主場隊對戰紀錄
+  Team1opp.B <- subset(Team1opp, Team== Team2)[, 2]
+  Team1opp.B <- as.numeric(as.character(Team1opp.B))
+  X.PTSDIF <- Team1opp.B - AVE
+  #主場隊的DATA
+  DATA3PT <- rbind(DATA3PT, X.3PT)
+  DATAFBPS <- rbind(DATAFBPS, X.FBPS)
+  DATAOFFTO <- rbind(DATAOFFTO, X.OFFTO)
+  DATAPITP <- rbind(DATAPITP, X.PITP)
+  DATAPTSDIF <- rbind(DATAPTSDIF, X.PTSDIF)
+}  
+
+DATAPTSDIF <- cbind(DATAPTSDIF, DATA3PT, DATAPITP, DATAOFFTO, DATAFBPS)
+names(DATAPTSDIF)[1] <- "DIF"
+names(DATAPTSDIF)[2] <- "PT3"
+names(DATAPTSDIF)[3] <- "PITP"
+names(DATAPTSDIF)[4] <- "OFFTO"
+names(DATAPTSDIF)[5] <- "FBPS"
+
+model3PT <- lm(DIF~PT3, DATAPTSDIF)
+model3PT$coefficients[2]
+modelPITP <- lm(DIF~PITP, DATAPTSDIF)
+modelPITP$coefficients[2]
+modelOFFTO <- lm(DIF~OFFTO, DATAPTSDIF)
+modelOFFTO$coefficients[2]
+modelFBPS <- lm(DIF~FBPS, DATAPTSDIF)
+modelFBPS$coefficients[2]
+
+
+#近十場勝率
+X.PB1 <-subset(df.d, Team ==Team1)[, 2]
+PTSBONUS1 <- as.numeric(as.character(X.PB1))*10
+X.PB2 <-subset(df.d, Team ==Team1.b)[, 2]
+PTSBONUS2 <- as.numeric(as.character(X.PB2))*10 
+
+#主客場分差
+HOME <-subset(df.c, Team ==Team1)[, 4]
+HOME <- as.numeric(as.character(HOME))
+ROAD <-subset(df.c, Team ==Team1.b)[, 3]
+AVE2 <- subset(df.c, Team ==Team1.b)[, 2]
+ROAD <- as.numeric(as.character(ROAD))
+AVE2 <- as.numeric(as.character(AVE2))
+HOMEPTS <- HOME-AVE
+ROADPTS <- ROAD-AVE2
+
+#建立客隊的data做回歸
+
+Team2opp <- Teams[[Team1.b]]
+vectorTeams2 <- as.vector(Team2opp[,"Team"])
+DATA3PT.b <- data.frame(matrix(NA,0,1))
+DATAFBPS.b <- data.frame(matrix(NA,0,1))
+DATAOFFTO.b <- data.frame(matrix(NA,0,1))
+DATAPITP.b <- data.frame(matrix(NA,0,1))
+DATAPTSDIF.b <- data.frame(matrix(NA,0,1))
+
+for (i in vectorTeams2){
+  Team2 = i
+  #3PT
+  my3PM.b <- subset(df.b, Team == Team1.b)[, 10]
+  opp3PT.b <- subset(df.b, Team == Team2)[, 11]
+  my3PT.b <- subset(df.b, Team == Team1.b)[, 11]
+  opp3PM.b <- subset(df.b, Team == Team2)[, 10]
+  X.3PT.b <- (as.numeric(as.character(my3PM.b))+as.numeric(as.character(opp3PT.b)))-(as.numeric(as.character(opp3PM.b))+as.numeric(as.character(my3PT.b)))
+  #FBPS
+  myFBPSM.b <- subset(df.b, Team == Team1.b)[, 3]
+  oppFBPS.b <- subset(df.b, Team == Team2)[, 6]
+  myFBPS.b <- subset(df.b, Team == Team1.b)[, 6]
+  oppFBPSM.b <- subset(df.b, Team == Team2)[, 3]
+  X.FBPS.b <- (as.numeric(as.character(myFBPSM.b))+as.numeric(as.character(oppFBPS.b)))-(as.numeric(as.character(myFBPS.b))+as.numeric(as.character(oppFBPSM.b)))
+  #OFFTO
+  myOFFTOM.b <- subset(df.b, Team ==Team1.b)[, 2]
+  oppOFFTO.b <- subset(df.b, Team ==Team2)[, 5]
+  myOFFTO.b <-subset(df.b, Team ==Team1.b)[, 5]
+  oppOFFTOM.b <- subset(df.b, Team == Team2)[, 2]
+  X.OFFTO.b <- (as.numeric(as.character(myOFFTOM.b))+as.numeric(as.character(oppOFFTO.b)))-(as.numeric(as.character(myOFFTO.b))+as.numeric(as.character(oppOFFTOM.b)))
+  #PITP
+  myPITPM.b <- subset(df.b, Team ==Team1.b)[, 4]
+  oppPITP.b <- subset(df.b, Team ==Team2)[, 7]
+  myPITP.b <-subset(df.b, Team ==Team1.b)[, 7]
+  oppPITPM.b <- subset(df.b, Team == Team2)[, 4]
+  X.PITP.b <- (as.numeric(as.character(myPITPM.b))+as.numeric(as.character(oppPITP.b)))-(as.numeric(as.character(myPITP.b))+as.numeric(as.character(oppPITPM.b)))
+  #客場隊的對戰紀錄
+  Team2opp.B <- subset(Team2opp, Team== Team2)[, 2]
+  Team2opp.B <- as.numeric(as.character(Team2opp.B))
+  X.PTSDIF.b <- Team2opp.B - AVE2
+  #客場隊的DATA
+  DATA3PT.b <- rbind(DATA3PT.b, X.3PT.b)
+  DATAFBPS.b <- rbind(DATAFBPS.b, X.FBPS.b)
+  DATAOFFTO.b <- rbind(DATAOFFTO.b, X.OFFTO.b)
+  DATAPITP.b <- rbind(DATAPITP.b, X.PITP.b)
+  DATAPTSDIF.b <- rbind(DATAPTSDIF.b, X.PTSDIF.b)
+}  
+
+DATAPTSDIF.b <- cbind(DATAPTSDIF.b, DATA3PT.b, DATAPITP.b, DATAOFFTO.b, DATAFBPS.b)
+names(DATAPTSDIF.b)[1] <- "DIF"
+names(DATAPTSDIF.b)[2] <- "PT3"
+names(DATAPTSDIF.b)[3] <- "PITP"
+names(DATAPTSDIF.b)[4] <- "OFFTO"
+names(DATAPTSDIF.b)[5] <- "FBPS"
+
+model3PT.b <- lm(DIF~PT3, DATAPTSDIF.b)
+model3PT.b$coefficients[2]
+modelPITP.b <- lm(DIF~PITP, DATAPTSDIF.b)
+modelPITP.b$coefficients[2]
+modelOFFTO.b <- lm(DIF~OFFTO, DATAPTSDIF.b)
+modelOFFTO.b$coefficients[2]
+modelFBPS.b <- lm(DIF~FBPS, DATAPTSDIF.b)
+modelFBPS.b$coefficients[2]
+
+#設基準值
+#Team1(MYOFR+OPPDFR) / 2     
+#Team2(OPPOFR+MYDFR) / 2
+
+my3PM <- subset(df.b, Team == Team1)[, 10]
+opp3PT <- subset(df.b, Team == Team1.b)[, 11]
+my3PT <- subset(df.b, Team == Team1)[, 11]
+opp3PM <- subset(df.b, Team == Team1.b)[, 10]
+X.3PT <- (as.numeric(as.character(my3PM))+as.numeric(as.character(opp3PT)))-(as.numeric(as.character(opp3PM))+as.numeric(as.character(my3PT)))
+#FBPS
+myFBPSM <- subset(df.b, Team == Team1)[, 3]
+oppFBPS <- subset(df.b, Team == Team1.b)[, 6]
+myFBPS <- subset(df.b, Team == Team1)[, 6]
+oppFBPSM <- subset(df.b, Team == Team1.b)[, 3]
+X.FBPS <- (as.numeric(as.character(myFBPSM))+as.numeric(as.character(oppFBPS)))-(as.numeric(as.character(myFBPS))+as.numeric(as.character(oppFBPSM)))
+#OFFTO
+myOFFTOM <- subset(df.b, Team ==Team1)[, 2]
+oppOFFTO <- subset(df.b, Team ==Team1.b)[, 5]
+myOFFTO <-subset(df.b, Team ==Team1)[, 5]
+oppOFFTOM <- subset(df.b, Team == Team1.b)[, 2]
+X.OFFTO <- (as.numeric(as.character(myOFFTOM))+as.numeric(as.character(oppOFFTO)))-(as.numeric(as.character(myOFFTO))+as.numeric(as.character(oppOFFTOM)))
+#PITP
+myPITPM <- subset(df.b, Team ==Team1)[, 4]
+oppPITP <- subset(df.b, Team ==Team1.b)[, 7]
+myPITP <-subset(df.b, Team ==Team1)[, 7]
+oppPITPM <- subset(df.b, Team == Team1.b)[, 4]
+X.PITP <- (as.numeric(as.character(myPITPM))+as.numeric(as.character(oppPITP)))-(as.numeric(as.character(myPITP))+as.numeric(as.character(oppPITPM)))
+#FINAL
+score1 <- as.numeric(as.character(subset(df.a, Team == Team1)[, 2]))+as.numeric(as.character(subset(df.a, Team == Team1.b)[, 3]))
+score2 <- as.numeric(as.character(subset(df.a, Team == Team1.b)[, 2]))+as.numeric(as.character(subset(df.a, Team == Team1)[, 3]))
+score1 <- score1/2
+score2 <- score2/2
+score1 <- score1+X.3PT*model3PT$coefficients[2]+X.FBPS*modelFBPS$coefficients[2]+X.OFFTO*modelOFFTO$coefficients[2]+X.PITP*modelPITP$coefficients[2]+PTSBONUS1+HOMEPTS
+score2 <- score2-X.3PT*model3PT.b$coefficients[2]-X.FBPS*modelFBPS.b$coefficients[2]-X.OFFTO*modelOFFTO.b$coefficients[2]-X.PITP*modelPITP.b$coefficients[2]+PTSBONUS2+ROADPTS
+
+
+
+print(score1)
+print(score2)
+```````````````````
+缺點
+-------------------------------
+讓程式自動跑的時候有時會東西還沒抓下來，下一行的dataframe就先建了，就變空的data，可能要把它寫在同一行才能避免
+
+總結
+----------------------------------------
+基本上就是兩隊會各有一個基準分，然後我用抓下來的數據做回歸，看看我設的變數會對得分造成什麼影響(恩，這很主觀)，最後會出來兩個分數，我在用這個分數決定我要買誰贏
+
+
