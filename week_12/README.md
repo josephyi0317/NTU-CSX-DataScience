@@ -1,7 +1,7 @@
 week_12
 ==========================================
->NER
+>1.NER實作
 
->PYTHON
+>2.PYTHON嘗試
 
->網址 : https://josephyi0317.github.io/NTU-CSX-DataScience/week_12/week_12.html
+>3.網址 : https://josephyi0317.github.io/NTU-CSX-DataScience/week_12/week_12.html
